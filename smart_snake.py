@@ -7,30 +7,43 @@ from snake import Snake
 class SmartSnake(Snake):
     def __init__(self, x, y, direction, col, scr):
         Snake.__init__(self, x, y, direction, col, scr)
-        self.apple_brain = None
-        self.block_brain = None
         self.vis_r = 3
+        r = self.vis_r
+        self.apple_brain_right = np.zeros(shape=[2*r+1, 2*r+1])
+        self.apple_brain_forward = np.zeros(shape=[2*r+1, 2*r+1])
+        self.apple_brain_left = np.zeros(shape=[2*r+1, 2*r+1])
+        self.block_brain_right = np.zeros(shape=[2*r+1, 2*r+1])
+        self.block_brain_forward = np.zeros(shape=[2*r+1, 2*r+1])
+        self.block_brain_left = np.zeros(shape=[2*r+1, 2*r+1])
 
     def set_default_brains(self):
         r = self.vis_r
-        self.apple_brain = np.zeros(shape=[2*r+1, 2*r+1, 3])
-        self.apple_brain[r, r+1:2*r+2, 0] = list(range(r, 0, -1))
-        self.apple_brain[0:r, r, 1] = list(range(1, r+1))
-        self.apple_brain[r, 0:r, 2] = list(range(1, r+1))
+        self.apple_brain_right[r, r+1:2*r+2, 0] = list(range(r, 0, -1))
+        self.apple_brain_forward[0:r, r, 1] = list(range(1, r+1))
+        self.apple_brain_left[r, 0:r, 2] = list(range(1, r+1))
 
-        self.block_brain = np.zeros(shape=[2*r+1, 2*r+1, 3])
-        self.block_brain[r, r-1, 0] = -10
-        self.block_brain[r-1, r, 1] = -10
-        self.block_brain[r, r+1, 2] = -10
+        self.block_brain_right[r, r+1, 2] = -10
+        self.block_brain_forward[r-1, r, 1] = -10
+        self.block_brain_left[r, r-1, 0] = -10
 
     def make_decision(self, apple_map, brick_map, meat_map):
         a_view = self.map_view(apple_map)
         b_view = self.map_view(brick_map)
         m_view = self.map_view(meat_map)
-        left = sum(a_view*self.apple_brain[:,:,0], axis=(1, 2)) + sum(a_view*self.apple_brain[:,:,0], axis=(1, 2))
+        b_view = b_view + m_view
+        right = np.sum(a_view*self.apple_brain_right) + np.sum(a_view*self.apple_brain_right)
+        forward = np.sum(a_view*self.apple_brain_forward) + np.sum(a_view*self.apple_brain_forward)
+        left = np.sum(a_view*self.apple_brain_left) + np.sum(a_view*self.apple_brain_left)
+        if forward >= left and forward >= right:
+            print('forward')
+            pass
+        elif right >= left:
+            print('right')
+            self.turn_right()
+        else:
+            print('left')
+            self.turn_left()
 
-
-        pass
 
     def map_view(self, mp):
         r = self.vis_r

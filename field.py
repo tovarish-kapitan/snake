@@ -19,8 +19,8 @@ class Field:
         self.apple_map.astype(int)
         self.apples = []
 
-        self.segment_map = np.zeros([self.nx, self.ny])
-        self.segment_map.astype(int)
+        self.meat_map = np.zeros([self.nx, self.ny])
+        self.meat_map.astype(int)
 
     def set_frame(self, width):
         self.brick_map[width, width:self.ny-width] = 1
