@@ -64,9 +64,6 @@ class Game:
             while self.snake.energy < c.segment_energy * len(self.snake):
                 self.snake.shrink()
             self.scr.fill(c.gray)
-            self.field.draw_bricks()
-            self.field.draw_apples()
-            self.snake.draw()
 
             pygame.display.flip()
             pygame.display.update()
