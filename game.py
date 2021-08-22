@@ -33,13 +33,11 @@ class Game:
         gameClock = pygame.time.Clock()
         self.scr = pygame.display.set_mode((c.screen_width, c.screen_height), pygame.HWSURFACE)
 
-        self.field = Field(self.scr)
+        self.field = Field()
         self.field.set_frame(0)
-        self.snake = Snake(5, 5, 1, c.green, self.scr)
-        while c.segment_energy * len(self.snake) < c.start_energy:
-            self.snake.grow()
-        self.game_on = False
-        while not self.game_on:
+        self.snake = Snake(5, 5, 1, self.field)
+        self.game_on = True
+        while self.game_on:
             gameClock.tick(c.fps)
             self.field.spawn_random_apples(1)
             key_dir = dir_from_key()
@@ -54,17 +52,20 @@ class Game:
             if self.snake.self_intersection():
                 self.game_over()
                 break
-            for apple in self.field.apples:
-                if apple.x == x and apple.y == y:
-                    self.snake.increase_hp(apple.energy)
-                    self.field.apples.remove(apple)
-            self.snake.decrease_hp(5)
-            while self.snake.energy >= c.segment_energy * len(self.snake):
+            if self.field.apple_map[x, y] == 1:
+                self.snake.incr_energy(c.apple_energy)
+                self.field.decr_apple(x, y)
+            self.snake.decr_energy(5)
+            if self.snake.energy >= c.segment_energy:
                 self.snake.grow()
-            while self.snake.energy < c.segment_energy * len(self.snake):
+                self.snake.decr_energy(c.segment_energy)
+            elif self.snake.energy < 0:
                 self.snake.shrink()
-            self.scr.fill(c.gray)
-
+                self.snake.incr_energy(c.segment_energy)
+            if len(self.snake) < 1:
+                self.game_over()
+            pix_arr = self.field.render_field()
+            pygame.surfarray.blit_array(self.scr, pix_arr)
             pygame.display.flip()
             pygame.display.update()
 
@@ -72,7 +73,7 @@ class Game:
         pass
 
     def game_over(self):
-        self.game_on = True
+        self.game_on = False
 
 
 if __name__ == "__main__":
