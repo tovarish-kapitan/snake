@@ -20,10 +20,10 @@ class Field:
         self.meat_map.astype(int)
 
     def set_frame(self, width):
-        self.brick_map[width, width:self.ny-width] = 1
-        self.brick_map[self.nx-width-1, width:self.ny-width] = 1
-        self.brick_map[width:self.nx-width, width] = 1
-        self.brick_map[width:self.nx-width, self.ny-width-1] = 1
+        self.brick_map[0:width, :] = 1
+        self.brick_map[self.nx-width:, :] = 1
+        self.brick_map[:, 0:width] = 1
+        self.brick_map[:, self.ny-width:] = 1
 
     def spawn_random_apples(self, n):
         for i in range(n):

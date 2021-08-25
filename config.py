@@ -1,11 +1,12 @@
 import pygame
 
-square_size = 20
-nx = 20
-ny = 20
+square_size = 1
+nx = 1300
+ny = 700
+
 screen_width = nx * square_size
 screen_height = ny * square_size
-fps = 10
+fps = 20
 key = {"UP": 1, "DOWN": 2, "LEFT": 3, "RIGHT": 0}
 start_energy = 500
 segment_energy = 50

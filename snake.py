@@ -59,13 +59,13 @@ class Snake:
 
     def set_direction(self, direction):
         if self.direction == 1 and direction == 3:
-            pass
+            return
         if self.direction == 3 and direction == 1:
-            pass
-        if self.direction == 2 and direction == 4:
-            pass
-        if self.direction == 4 and direction == 2:
-            pass
+            return
+        if self.direction == 2 and direction == 0:
+            return
+        if self.direction == 0 and direction == 2:
+            return
         self.direction = direction
 
     def incr_energy(self, energy):
@@ -76,6 +76,26 @@ class Snake:
 
     def __len__(self):
         return len(self.stack)
+
+    def turn_left(self):
+        self.direction = (self.direction + 1) % 4
+
+    def turn_right(self):
+        self.direction = (self.direction - 1) % 4
+
+    def die(self):
+        for seg in self.stack:
+            x = seg.x
+            y = seg.y
+            self.field.meat_map[x, y] = 0
+            if self.field.brick_map[x, y] == 0:
+                self.field.apple_map[x, y] = 1
+
+    def checkout_body(self):
+        for seg in self.stack:
+            x = seg.x
+            y = seg.y
+            self.field.meat_map[x, y] = 1
 
 
 if __name__ == "__main__":
