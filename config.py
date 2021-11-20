@@ -6,7 +6,7 @@ ny = 700
 
 screen_width = nx * square_size
 screen_height = ny * square_size
-fps = 20
+fps = 10
 key = {"UP": 1, "DOWN": 2, "LEFT": 3, "RIGHT": 0}
 start_energy = 500
 segment_energy = 50

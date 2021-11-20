@@ -37,7 +37,7 @@ class Snake:
         ass = Segment(x, y, self.track.direction)
         self.stack.append(ass)
         self.field.incr_meat(x, y)
-        self.track = ass
+        # self.track = ass
 
     def self_intersection(self):
         x = self.head_x()
@@ -95,7 +95,8 @@ class Snake:
         for seg in self.stack:
             x = seg.x
             y = seg.y
-            self.field.meat_map[x, y] = 1
+            if self.field.meat_map[x, y] == 0:
+                self.field.meat_map[x, y] = 1
 
 
 if __name__ == "__main__":

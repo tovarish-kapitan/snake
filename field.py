@@ -38,7 +38,7 @@ class Field:
         self.apple_map[x, y] += 1
 
     def decr_apple(self, x, y):
-        self.apple_map[x, y] -= 1
+        self.apple_map[x, y] = 0
 
     def incr_meat(self, x, y):
         self.meat_map[x, y] += 1

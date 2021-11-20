@@ -77,7 +77,7 @@ class Game:
 
         self.field = Field()
         self.field.set_frame(5)
-        for i in range(20):
+        for i in range(1):
             x = np.random.randint(c.nx)
             y = np.random.randint(c.ny)
             while self.field.brick_map[x, y] != 0:
@@ -103,9 +103,9 @@ class Game:
                 if self.field.brick_map[x, y] != 0:
                     dead.append(snake)
                 if self.field.meat_map[x, y] != 1:
-                    if snake not in self.snakes:
+                    if snake not in dead:
                         dead.append(snake)
-                if self.field.apple_map[x, y] == 1:
+                if self.field.apple_map[x, y] > 0:
                     snake.incr_energy(c.apple_energy)
                     self.field.decr_apple(x, y)
                 snake.decr_energy(5)
