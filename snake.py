@@ -4,21 +4,20 @@ import config as c
 
 
 class Snake:
-    def __init__(self, x, y, direction, field):
+    def __init__(self, x, y, direction, field, start_energy):
         self.direction = direction
         self.field = field
 
         self.stack = []
         head = Segment(x, y, self.direction)
         self.stack.append(head)
-        self.track = head
-        self.energy = c.start_energy
+        self.energy = start_energy
         self.field.incr_meat(x, y)
 
     def step(self):
         j = len(self.stack) - 1
-        self.track = self.stack[j]
-        self.field.decr_meat(self.track.x, self.track.y)
+        ass = self.stack[j]
+        self.field.decr_meat(ass.x, ass.y)
         while j != 0:
             self.stack[j].set_direction(self.stack[j - 1].direction)
             self.stack[j].x = self.stack[j - 1].x
@@ -32,12 +31,10 @@ class Snake:
         self.field.incr_meat(x, y)
 
     def grow(self):
-        x = self.track.x - self.track.dx
-        y = self.track.y - self.track.dy
-        ass = Segment(x, y, self.track.direction)
+        x, y = self.track_xy()
+        ass = Segment(x, y, self.stack[-1].direction)
         self.stack.append(ass)
         self.field.incr_meat(x, y)
-        # self.track = ass
 
     def self_intersection(self):
         x = self.head_x()
@@ -48,8 +45,10 @@ class Snake:
         return False
 
     def shrink(self):
-        self.track = self.stack.pop(-1)
-        self.field.decr_meat(self.track.x, self.track.y)
+        x = self.stack[-1].x
+        y = self.stack[-1].y
+        self.field.decr_meat(x, y)
+        self.stack.pop(-1)
 
     def head_x(self):
         return self.stack[0].x
@@ -87,7 +86,8 @@ class Snake:
         for seg in self.stack:
             x = seg.x
             y = seg.y
-            self.field.meat_map[x, y] = 0
+            self.field.decr_meat(x, y)
+            # self.field.meat_map[x, y] = 0
             if self.field.brick_map[x, y] == 0:
                 self.field.apple_map[x, y] = 1
 
@@ -97,6 +97,11 @@ class Snake:
             y = seg.y
             if self.field.meat_map[x, y] == 0:
                 self.field.meat_map[x, y] = 1
+
+    def track_xy(self):
+        x = self.stack[-1].x - self.stack[-1].dx
+        y = self.stack[-1].y - self.stack[-1].dy
+        return x, y
 
 
 if __name__ == "__main__":

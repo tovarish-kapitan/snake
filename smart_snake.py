@@ -6,8 +6,8 @@ from field import Field
 
 
 class SmartSnake(Snake):
-    def __init__(self, x, y, direction, field):
-        Snake.__init__(self, x, y, direction, field)
+    def __init__(self, x, y, direction, field, start_energy):
+        Snake.__init__(self, x, y, direction, field, start_energy)
         self.vis_r = 5
         r = self.vis_r
         self.apple_brain_right = np.zeros(shape=[2*r+1, 2*r+1])
@@ -57,7 +57,7 @@ class SmartSnake(Snake):
 
     def divide(self):
         ass = self.stack[-1]
-        new_snake = SmartSnake(ass.x, ass.y, ass.direction, self.field)
+        new_snake = SmartSnake(ass.x, ass.y, ass.direction, self.field, self.energy // 2)
         new_snake.set_direction((ass.direction+2) % 4)
         self.shrink()
         for i in range(4):
@@ -66,8 +66,9 @@ class SmartSnake(Snake):
             seg.set_direction((ass.direction+2) % 4)
             new_snake.stack.append(seg)
             self.shrink()
-        new_snake.energy = self.energy // 2
         self.energy = self.energy // 2
+        new_snake.checkout_body()
+        self.checkout_body()
         new_snake.set_default_brains()
         return new_snake
 
